@@ -4,4 +4,4 @@
 
 ### Osa3
 
-- [Tehtävät 3.1-3.7](https://github.com/smassine/fullstackopen-osa3/blob/master/index.js)
+- [Tehtävät 3.1-3.9](https://github.com/smassine/fullstackopen-osa3/blob/master/index.js)
