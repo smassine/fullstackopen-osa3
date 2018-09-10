@@ -1,10 +1,12 @@
-// Tehtävät 3.1–3.6
+// Tehtävät 3.1–3.7
 
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
+var morgan = require('morgan')
 
 app.use(bodyParser.json())
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms'))
 
 let persons = [
     {
