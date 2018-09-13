@@ -1,4 +1,4 @@
-// Tehtävät 3.1–3.13 & 3.15–3.16 & 3.18 & 3.20 done
+// Tehtävät 3.1–3.13 & 3.15–3.16 & 3.18 & 3.20 & 3.22 done
 
 const express = require('express')
 const app = express()
