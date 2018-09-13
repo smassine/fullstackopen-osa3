@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 // Ei salasanaa GitHubiin!
-const url = 'mongodb://smassine:<dbpassword>@ds155492.mlab.com:55492/fullstack-persons'
+const url = 'mongodb://smassine:sekred1@ds155492.mlab.com:55492/fullstack-persons'
 
 mongoose.connect(url, { useNewUrlParser: true })
 
