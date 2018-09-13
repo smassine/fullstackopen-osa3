@@ -1,4 +1,4 @@
-// Tehtävät 3.1–3.13 done
+// Tehtävät 3.1–3.13 & 3.15–3.16 done
 
 const express = require('express')
 const app = express()
@@ -22,32 +22,7 @@ const formatPerson = (person) => {
       number: person.number,
       id: person._id
     }
-  }
-
-/*
-let persons = [
-    {
-        name: "Arto Hellas",
-        number: "040-123456",
-        id: 1
-    },
-    {
-        name: "Matti Tienari",
-        number: "040-123456",
-        id: 2
-    },
-    {
-        name: "Arto Järvinen",
-        number: "040-123456",
-        id: 3
-    },
-    {
-        name: "Lea Kutvonen",
-        number: "040-123456",
-        id: 4
-    }
-  ]
-*/ 
+}
 
 app.get('/api/persons', (req, res) => {
 
@@ -87,43 +62,38 @@ app.get('/api/persons/:id', (req, res) => {
 })
 
 app.delete('/api/persons/:id', (req, res) => {
-    //const id = Number(req.params.id)
-    //persons = persons.filter(person => person.id !== id)
   
     Person
         .findByIdAndRemove(req.params.id)
         .then(deletedPerson => {
             res.status(204).end()
         })
+        .catch(error => {
+            res.status(400).send({ error: 'malformatted id' })
+        })
 
 })
 
-const generateId = () => {
-    const maxId = persons.length > 0 ? persons.map(person => person.id).sort().reverse()[0] : 1
-    return maxId + 1
-}
-
 app.post('/api/persons', (req, res) => {
     const body = req.body
-    const names = persons.map(person => person.name)
   
     if (body.name === undefined) {
         return res.status(400).json({ error: 'name missing' })
     } else if (body.number === undefined) {
         return res.status(400).json({ error: 'number missing' })
-    } else if (names.includes(body.name)) {
-        return res.status(400).json({ error: 'name must be unique'})
     }
   
-    const person = {
+    const person = new Person({
         name: body.name,
-        number: body.number, // Tehtävä 3.5: '040-' + Math.floor(Math.random() * 999999) + 1,
-        id: generateId()
-    }
+        number: body.number // Tehtävä 3.5: '040-' + Math.floor(Math.random() * 999999) + 1,
+    })
   
-    persons = persons.concat(person)
+    person
+        .save()
+        .then(savedPerson => {
+            res.json(formatPerson(savedPerson))
+        })
 
-    res.json(person)
 })
   
 const PORT = process.env.PORT || 3001
