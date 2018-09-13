@@ -5,7 +5,7 @@ const app = express()
 const bodyParser = require('body-parser')
 var morgan = require('morgan')
 const cors = require('cors')
-const Person = require('./models/Person')
+const Person = require('./models/person')
 
 morgan.token('responsedata', function (req) {
     return JSON.stringify(req.body)
@@ -51,9 +51,9 @@ app.get('/api/persons/:id', (req, res) => {
     
     Person
         .findById(req.params.id)
-        .then(person => {
-            if (person) {
-                res.json(formatPerson(person))
+        .then(personByID => {
+            if (personByID) {
+                res.json(formatPerson(personByID))
             } else {
                 response.status(404).end()
             }
