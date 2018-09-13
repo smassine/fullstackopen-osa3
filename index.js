@@ -51,9 +51,9 @@ app.get('/api/persons/:id', (req, res) => {
     
     Person
         .findById(req.params.id)
-        .then(personByID => {
-            if (personByID) {
-                res.json(formatPerson(personByID))
+        .then(person => {
+            if (person) {
+                res.json(formatPerson(person))
             } else {
                 response.status(404).end()
             }
