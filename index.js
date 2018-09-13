@@ -1,21 +1,30 @@
-// Tehtävät 3.1–3.11 done
+// Tehtävät 3.1–3.13 done
 
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
 var morgan = require('morgan')
 const cors = require('cors')
-
-app.use(express.static('build'))
-app.use(cors())
+const Person = require('./models/Person')
 
 morgan.token('responsedata', function (req) {
     return JSON.stringify(req.body)
 })
 
+app.use(express.static('build'))
+app.use(cors())
 app.use(bodyParser.json())
 app.use(morgan(':method :url :responsedata :status :res[content-length] - :response-time ms')) //tiny
 
+const formatPerson = (person) => {
+    return {
+      name: person.name,
+      number: person.number,
+      id: person._id
+    }
+  }
+
+/*
 let persons = [
     {
         name: "Arto Hellas",
@@ -37,35 +46,56 @@ let persons = [
         number: "040-123456",
         id: 4
     }
-  ]  
+  ]
+*/ 
 
 app.get('/api/persons', (req, res) => {
-    res.json(persons)
+
+    Person
+        .find({})
+        .then(persons => {
+            res.json(persons.map(formatPerson))
+        })
+
 })
 
 app.get('/api/info', (req, res) => {
-    const count_persons = persons.length
-    const date = new Date()
-    // Jostain syystä asentamillani versioilla ${persons.length} ja ${new Date()} eivät toimi
-    res.send('<p> Puhelinluettelossa on ' + count_persons + ' henkilön tiedot </p> <p>' + date + '</p>')
+
+    // Jostain syystä ${persons.length} ja ${new Date()} eivät toimi
+    Person
+        .find({})
+        .then(persons => {
+            const count_persons = persons.length
+            const date = new Date()
+            res.send('<p> Puhelinluettelossa on ' + count_persons + ' henkilön tiedot </p> <p>' + date + '</p>')
+        })
+
 })
 
 app.get('/api/persons/:id', (req, res) => {
-    const id = Number(req.params.id)
-    const person = persons.find(person => person.id === id)
-  
-    if (person) {
-        res.json(person)
-    } else {
-        res.status(404).end()
-    }
+    
+    Person
+        .findById(req.params.id)
+        .then(personByID => {
+            if (personByID) {
+                res.json(formatPerson(personByID))
+            } else {
+                res.status(404).end()
+            }
+        })
+
 })
 
 app.delete('/api/persons/:id', (req, res) => {
-    const id = Number(req.params.id)
-    persons = persons.filter(person => person.id !== id)
+    //const id = Number(req.params.id)
+    //persons = persons.filter(person => person.id !== id)
   
-    res.status(204).end()
+    Person
+        .findByIdAndRemove(req.params.id)
+        .then(deletedPerson => {
+            res.status(204).end()
+        })
+
 })
 
 const generateId = () => {
@@ -92,7 +122,7 @@ app.post('/api/persons', (req, res) => {
     }
   
     persons = persons.concat(person)
-  
+
     res.json(person)
 })
   
