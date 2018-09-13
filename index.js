@@ -1,4 +1,4 @@
-// Tehtävät 3.1–3.13 & 3.15–3.16 done
+// Tehtävät 3.1–3.13 & 3.15–3.16 & 3.18 done
 
 const express = require('express')
 const app = express()
@@ -55,8 +55,12 @@ app.get('/api/persons/:id', (req, res) => {
             if (personByID) {
                 res.json(formatPerson(personByID))
             } else {
-                res.status(404).end()
+                response.status(404).end()
             }
+        })
+        .catch(error => {
+            console.log(error)
+            res.status(400).send({ error: 'malformatted id' })
         })
 
 })
